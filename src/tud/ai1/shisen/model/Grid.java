@@ -1,11 +1,9 @@
 package tud.ai1.shisen.model;
 
 import java.util.List;
-
 import org.newdawn.slick.geom.Vector2f;
 
-import tud.ai1.shisen.util.Consts;
-import tud.ai1.shisen.util.PathFinder;
+import tud.ai1.shisen.util.IOOperations;
 
 public abstract class Grid implements IGrid {
 
@@ -42,6 +40,62 @@ public abstract class Grid implements IGrid {
 		for (int x = 0; x < grid.length; x++) {
 			for (int y = 0; y < grid[0].length; y++) {
 				grid[x][y].setPos(new Vector2f(x, y));
+			}
+		}
+	}
+
+	@Override
+	public void selectToken(final IToken token) {
+		if (this.selectedTokenOne == null) {
+			this.selectedTokenOne = token;
+			selectedTokenOne.setTokenState(TokenState.CLICKED);
+		} else if (this.selectedTokenTwo == null) {
+			this.selectedTokenTwo = token;
+			selectedTokenTwo.setTokenState(TokenState.CLICKED);
+			this.list = PathFinder.getInstance().findPath(this, (int) this.selectedTokenOne.getPos().x,
+					(int) this.selectedTokenOne.getPos().y, (int) this.selectedTokenTwo.getPos().x,
+					(int) this.selectedTokenTwo.getPos().y);
+			if (this.list == null || this.list.size() == 0
+					|| !this.selectedTokenOne.getDisplayValue().equals(this.selectedTokenTwo.getDisplayValue())) {
+				this.selectedTokenOne.setTokenState(TokenState.WRONG);
+				this.selectedTokenTwo.setTokenState(TokenState.WRONG);
+				this.updateScore(Consts.DECREASE_SCORE);
+				this.startTimer(Consts.DISPLAY_WRONG_TIME, TokenState.DEFAULT);
+			} else {
+				for (final IToken tok : this.list) {
+					tok.setTokenState(TokenState.CLICKED);
+				}
+				this.updateScore(Consts.GAIN_SCORE);
+				this.startTimer(Consts.DISPLAY_WRONG_TIME, TokenState.SOLVED);
+			}
+		}
+	}
+
+	private void startTimer(final double waitTime, final TokenState dest) {
+		this.timerActive = true;
+		this.currTime = System.currentTimeMillis();
+		this.waitTime = (int) waitTime * 1000;
+		this.destiny = dest;
+	}
+
+	@Override
+	public void getTimeOver() {
+		if (this.timerActive) {
+			if (System.currentTimeMillis() - this.currTime > this.waitTime) {
+				try {
+					if (this.list != null) {
+						for (final IToken tok : this.list) {
+							tok.setTokenState(TokenState.SOLVED);
+						}
+					}
+					this.selectedTokenOne.setTokenState(this.destiny);
+					this.selectedTokenTwo.setTokenState(this.destiny);
+					this.selectedTokenOne = null;
+					this.selectedTokenTwo = null;
+					this.timerActive = false;
+				} catch (final Exception e) {
+					e.printStackTrace();
+				}
 			}
 		}
 	}

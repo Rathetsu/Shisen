@@ -9,7 +9,7 @@ import tud.ai1.shisen.util.TokenDisplayValueProvider;
  * Implements the IToken interface.
  */
 
-public abstract class Token implements IToken {
+public class Token implements IToken {
 
     private static int counter = 0;
     private final int id;
