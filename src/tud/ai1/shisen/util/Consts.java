@@ -7,30 +7,30 @@ import org.newdawn.slick.geom.Vector2f;
 
 /**
  *
- * Dieses Interface beinhaltet alle wichtigen Konstanten fuer das
- * Shisen-Projekt.
+ * This interface contains all important constants for the
+ * Shisen project.
  *
- * @author Maximilian Kratz
- * @date 2019-05-06
+ * @author Ahmed Ezzat
  *
  */
 public interface Consts {
-	// Cheat Kosten
+	// Cheat Costs
 	public static final int CHEAT_COST_SOLVE_PAIR = -20;
 	public static final int CHEAT_COST_HINT = -10;
 	public static final int CHEAT_COST_FIND_PARTNER = -10;
 	public static final int START_POINTS = 0;
 
 	// Game States
-	// Score-Werte
+	// Score Values
 	public static final int GAIN_SCORE = 5;
 	public static final int WRONG_PAIR = -1;
 	public static final int DECREASE_SCORE = -5;
+	public static final int INITIAL_SCORE = 0;
 	int MAINMENU_STATE = 0;
 	int GAMEPLAY_STATE = 1;
 	int HIGHSCORE_STATE = 2;
 
-	// Betriebssystem Konstanten
+	// Operating System Constants
 	String WINDOWS_LIB_PATH = "org.lwjgl.librarypath";
 	String WINDOWS_USER_DIR = "/native/windows";
 	String MAC_LIB_PATH = "org.lwjgl.librarypath";
@@ -42,37 +42,37 @@ public interface Consts {
 	String WINDOWS_OS_NAME = "windows";
 	String MAC_OS_NAME = "mac";
 
-	// Parser Separierer
+	// Parser Separator
 	String SYMBOL_SEPARATOR = ",";
 
-	// Fenster Einstellungen
+	// Window Settings
 	int WINDOW_WIDTH = 800;
 	int WINDOW_HEIGHT = 600;
 
-	// Schriftarten
+	// Fonts
 	public static final TrueTypeFont FONT_15 = new TrueTypeFont(new Font("Courier New", Font.BOLD, 15), false);
 	public static final TrueTypeFont FONT_20 = new TrueTypeFont(new Font("Courier New", Font.BOLD, 20), false);
 	public static final TrueTypeFont FONT_30 = new TrueTypeFont(new Font("Courier New", Font.BOLD, 30), false);
 	public static final TrueTypeFont FONT_15_GAMETOKEN = new TrueTypeFont(new Font("Courier New", Font.BOLD, 15),
 			false);
 
-	// Button Bilder Pfade
+	// Button Image Paths
 	public static final String BUTTON_ACTIVE_MENU = "/assets/buttons/menuButton.png";
 	public static final String BUTTON_INACTIVE_MENU = "/assets/buttons/menuButton_inactive.png";
 
 	public static final String BUTTON_ACTIVE_SIZE = "/assets/buttons/fieldSizeButton.png";
 	public static final String BUTTON_INACTIVE_SIZE = "/assets/buttons/fieldSizeButton_inactive.png";
 
-	// Token Bilder Pfade
+	// Token Image Paths
 	public static final String TOKEN_NORMAL = "/assets/tokens/normal.png";
 	public static final String TOKEN_CLICKED = "/assets/tokens/clicked.png";
 	public static final String TOKEN_BLOCKED = "/assets/tokens/blocked.png";
 	public static final String TOKEN_WRONG = "/assets/tokens/wrong.png";
 
-	// Zeit, die ein ausgeaehltes Elemente hervorgehoben wird
+	// Time a selected element is highlighted
 	public static final int DISPLAY_WRONG_TIME = 1;
 
-	// Start-Position eines Grids
+	// Starting position of a grid
 	public final Vector2f startPosition = new Vector2f(20, 220);
 
 	// Cheat IDs
@@ -85,10 +85,10 @@ public interface Consts {
 	String MAPS_PATH = ASSETS_PATH + "/maps";
 	String SYMBOLS_PATH = ASSETS_PATH + "/symbol/symbols_latin.txt";
 
-	// Highscore-Pfad
+	// Highscore Path
 	String HIGHSCORE_PATH = ASSETS_PATH + "/highscore/highscores.hs";
 
-	// Hintergruende
+	// Backgrounds
 	String BG_GENERAL = ASSETS_PATH + "/background_2.png";
 	String BG_HIGHSCORE = ASSETS_PATH + "/background_2_highscore.png";
 }

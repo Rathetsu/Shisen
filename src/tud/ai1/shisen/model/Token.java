@@ -7,6 +7,9 @@ import tud.ai1.shisen.util.TokenDisplayValueProvider;
 /**
  * Class that represents a single field on the entire playing field.
  * Implements the IToken interface.
+ * 
+ * @author Ahmed Ezzat
+ * 
  */
 
 public class Token implements IToken {
@@ -40,7 +43,6 @@ public class Token implements IToken {
 
     @Override
     public String getDisplayValue() {
-        // Assuming TokenDisplayValueProvider is a class available in the same package
         return TokenDisplayValueProvider.getInstance().getDisplayValue(this.id);
     }
 
