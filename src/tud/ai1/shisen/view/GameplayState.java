@@ -27,17 +27,17 @@ import tud.ai1.shisen.view.util.Button;
 import tud.ai1.shisen.view.util.GameToken;
 
 /**
- * @author Niklas Grimm, Niklas Vogel
+ * @author Ahmed Ezzat
  *
- *         Diese Klasse repraesentiert das Spielfenster.
+ *  This class represents the game window.
  */
 public class GameplayState extends BasicGameState {
 
-	private int stateID; // Identifier dieses BasicGameState
-	private StateBasedEntityManager entityManager; // zugehoeriger entityManager
-	private Vector2f startPos = Consts.startPosition; // Startposition des Fensters auf dem Bildschirm
-	private int offset = 4; // Abstand zwischen angezeigten Tokens
-	private int imgSize = 36; // Groesse der Tokens
+	private int stateID; // Identifier of this BasicGameState
+	private StateBasedEntityManager entityManager; // associated entityManager
+	private Vector2f startPos = Consts.startPosition; // Starting position of the window on the screen
+	private int offset = 4; // Distance between displayed tokens
+	private int imgSize = 36; // Size of tokens
 	private long startTime;
 	private Grid grid;
 
@@ -47,24 +47,19 @@ public class GameplayState extends BasicGameState {
 	}
 
 	/**
-	 * Wird vor dem (erstmaligen) Starten dieses States ausgefuehrt.
-	 * 
-	 * @param container GameContainer
-	 * @param game      StateBasedGame
-	 * 
-	 * @throws SlickException Wirft eine SlickException, wenn bei der
-	 *                        Spielerstellung ein Fehler auftritt.
-	 */
+	* Is executed before the (first) start of this state.
+	*
+	*/
 	@Override
 	public void init(GameContainer container, StateBasedGame game) throws SlickException {
 
-		// Hintergrund laden
-		Entity background = new Entity("background"); // Entitaet fuer Hintergrund
-		background.setPosition(new Vector2f(400, 300)); // Startposition des Hintergrunds
+		// loading the background
+		Entity background = new Entity("background"); // entity for background
+		background.setPosition(new Vector2f(400, 300)); // Background start position
 		background.addComponent(new ImageRenderComponent(new Image(Consts.BG_GENERAL)));
 		StateBasedEntityManager.getInstance().addEntity(stateID, background);
 
-		createGameBoard(); // Erzeugt das Spielfeld
+		createGameBoard(); // Creates the playing field
 		Action cheat1 = new Action() {
 
 			@Override
@@ -120,9 +115,7 @@ public class GameplayState extends BasicGameState {
 	}
 
 	/**
-	 * Fuert den Cheat mit der passenden ID auf dem Grid aus.
-	 * 
-	 * @param cheatID.
+	 * Execute the cheat with the matching ID on the grid.
 	 */
 	private void executeCheat(int cheatID) {
 		switch (cheatID) {
@@ -141,13 +134,7 @@ public class GameplayState extends BasicGameState {
 	}
 
 	/**
-	 * Wird ausgefuehrt, wenn in diesen GameState gewechselt wird.
-	 * 
-	 * @param container GameContainer
-	 * @param game      StateBasedGame
-	 * 
-	 * @throws SlickException Wirft eine SlickException, wenn beim Wechseln in den
-	 *                        GameState ein Fehler auftritt.
+	 * Executed when changing to this GameState.
 	 */
 	@Override
 	public void enter(GameContainer container, StateBasedGame game) throws SlickException {
@@ -158,43 +145,30 @@ public class GameplayState extends BasicGameState {
 	}
 
 	/**
-	 * Wird vor dem Frame ausgefuehrt.
-	 * 
-	 * @param container GameContainer
-	 * @param game      StateBasedGame
-	 * 
-	 * @throws SlickException Wirft eine Slickexception beim Updaten des
-	 *                        EntityManagers, wenn ein Fehler auftritt.
+	 * Executed before the frame.
 	 */
 	@Override
 	public void update(GameContainer container, StateBasedGame game, int delta) throws SlickException {
-		// StatedBasedEntityManager soll alle Entities aktualisieren
+		// StatedBasedEntityManager shall update all entities
 		entityManager.updateEntities(container, game, delta);
 	}
 
 	/**
-	 * Wird mit dem Frame ausgefuehrt.
-	 * 
-	 * @param container GameContainer
-	 * @param game      StateBasedGame
-	 * @param g         Graphics
-	 * 
-	 * @throws SlickException Wirft eine SlickException, wenn beim Rendern ein
-	 *                        Fehler auftritt.
+	 * Runs with the frame. Renders the game.
 	 */
 	@Override
 	public void render(GameContainer container, StateBasedGame game, Graphics g) throws SlickException {
-		// StatedBasedEntityManager soll alle Entities rendern
+		// StatedBasedEntityManager shall render all entities
 		if (Grid.isSolved()) {
 			game.enterState(Consts.HIGHSCORE_STATE);
 		}
 		entityManager.renderEntities(container, game, g);
-		// Zeigt die Zeit an
+		// Shows the time
 		g.drawString(String.format("Time: %02d:%02d", Math.round((System.currentTimeMillis() - startTime) / 60000),
 				Math.round(((System.currentTimeMillis() - startTime) / 1000) % 60)), 650, 100);
 		g.drawString("Score: " + grid.getScore(), 650, 150);
 
-		// Hintergrund fuer Score und Zeitanzeige
+		// Background for score and time display
 		Entity label = new Entity("label");
 		label.setPosition(new Vector2f(700, 135));
 		label.setScale(1.2f);
@@ -204,9 +178,7 @@ public class GameplayState extends BasicGameState {
 	}
 
 	/**
-	 * Gibt die ID zurueck.
-	 * 
-	 * @return ID
+	 * Returns the ID.
 	 */
 	@Override
 	public int getID() {
@@ -214,21 +186,14 @@ public class GameplayState extends BasicGameState {
 	}
 
 	/**
-	 * Berechnet aus der Position im Array die Position auf dem Bildschirm.
-	 * 
-	 * @param x X-Koordinate
-	 * @param y Y-Koordinate
-	 * @return Position als Vector2f
+	 * Calculates the position on the screen from the position in the array.
 	 */
 	public Vector2f grid2Pos(int x, int y) {
 		return new Vector2f(x * (imgSize + offset) + startPos.getX(), y * (imgSize + offset) + startPos.getY());
 	}
 
 	/**
-	 * Erzeugt das Spielfeld.
-	 * 
-	 * @throws SlickException Wirft eine SlickException, wenn beim Erzeugen des
-	 *                        Spielfelds ein Fehler auftritt.
+	 * Creates the playing field.
 	 */
 	private void createGameBoard() throws SlickException {
 		this.grid = new Grid("assets/maps/001.map");
@@ -242,13 +207,7 @@ public class GameplayState extends BasicGameState {
 	}
 
 	/**
-	 * Wird aufgerufen, wenn der GameState verlassen wird.
-	 * 
-	 * @param container GameContainer
-	 * @param game      StateBasedGame
-	 * 
-	 * @throws SlickException Wirft eine SlickException, wenn beim Verlassen des
-	 *                        GameStates ein Fehler auftritt.
+	 * Called when the GameState is exited.
 	 */
 	@Override
 	public void leave(GameContainer container, StateBasedGame game) throws SlickException {

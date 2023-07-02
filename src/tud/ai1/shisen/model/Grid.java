@@ -9,7 +9,7 @@ import tud.ai1.shisen.util.IOOperations;
 import tud.ai1.shisen.util.PathFinder;
 
 
-public abstract class Grid implements IGrid {
+public class Grid implements IGrid {
 
     private int waitTime = 1000;
     private TokenState destiny;
