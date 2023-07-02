@@ -1,5 +1,7 @@
 package tud.ai1.shisen.util;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
@@ -9,34 +11,52 @@ import tud.ai1.shisen.model.TokenState;
 
 /**
  * 
- * Diese Klasse repraesentiert die Cheats.
+ * This class represents the cheats functionality of the game.
  * 
- * @author Niklas Vogel
+ * @author Ahmed Ezzat
  *
  */
 public class Cheats {
 
 	/**
-	 * Diese Klasse soll nicht initialisierbar sein, da sie nur statische Methoden
-	 * enthaelt.
+	 * This class is not intended to be initializable as it only has static methods.
 	 */
 	private Cheats() {
 	}
 
-	/**
-	 * 
-	 */
 	public static void findPartner(final Grid grid) {
-		// TODO Aufgabe 5e
+		// Check if exactly one token is selected
+		IToken[] activeTokens = grid.getActiveTokens();
+
+		if (activeTokens[0] != null && activeTokens[1] == null) {
+			IToken selectedToken = activeTokens[0];
+
+			// Find possible partners
+			List<IToken> possiblePartners = Cheats.findTokensWithType(selectedToken, grid);
+
+			// Try to find a solvable partner
+			for (IToken partner : possiblePartners) {
+				if (Cheats.solvable(selectedToken, partner, grid)) {
+					grid.selectToken(partner); // Select the solvable partner
+					grid.updateScore(Consts.CHEAT_COST_FIND_PARTNER); // Subtract cheat cost
+					return;
+				}
+			}
+
+			// If no solvable partner is found, select a random partner
+			if (!possiblePartners.isEmpty()) {
+				grid.selectToken(possiblePartners.get(0)); // Select the first unsolvable partner
+				grid.updateScore(Consts.CHEAT_COST_FIND_PARTNER + Consts.DECREASE_SCORE); // Subtract cheat cost and incorrect pair cost
+			}
+		}
 	}
 
+
 	/**
-	 * Dieser Cheat markiert einen Token, der derzeit loesbar ist.
-	 *
-	 * @param grid Grid, auf dem ein loesbarer Token markiert werden soll.
+	 * This cheat marks a token that is currently solvable.
 	 */
 	public static void useHint(final Grid grid) {
-		// Wenn bereits zwei Tokens angeklickt sind, breche Cheat ab
+		// If two tokens are already clicked, cancel cheat
 		if (grid.bothClicked())
 			return;
 		if (!isCheatPossible(grid, Consts.CHEAT_HINT))
@@ -54,25 +74,28 @@ public class Cheats {
 		grid.updateScore(Consts.CHEAT_COST_HINT);
 	}
 
-	/**
-	 * 
-	 */
 	public static void solvePair(final Grid grid) {
-		// TODO Aufgabe 5d
+		if (!isCheatPossible(grid, Consts.CHEAT_SOLVE_PAIR)) {
+			return;
+		}
+		IToken[] tokens = findValidTokens(grid);
+		grid.deselectTokens();
+		if (tokens != null) {
+			grid.selectToken(tokens[0]);
+			grid.selectToken(tokens[1]);
+		}
+		grid.updateScore(-getCheatCost(Consts.CHEAT_SOLVE_PAIR));
 	}
 
+
 	/**
-	 * Findet ein Paar aus derzeit loesbaren Tokens.
-	 * 
-	 * @param grid Spielfeld, auf dem das loesbare Paar gefunden werden soll.
-	 * @return Loesbares Tokenpaar, null falls kein loesbares Paar mehr vorhanden
-	 *         ist
+	 * Finds a pair of currently solvable tokens.
 	 */
 	private static IToken[] findValidTokens(final Grid grid) {
 		final IToken[][] board = grid.getGrid();
 		IToken token = null;
 		Random r = new Random();
-		// Offset fuer die Startposition der Suche im Grid-Array
+		// Offset for the start position of the search in the grid array
 		int n1 = r.nextInt(board.length);
 		int n2 = r.nextInt(board[0].length);
 		for (int x = 0; x < board.length; x++) {
@@ -80,7 +103,7 @@ public class Cheats {
 				token = board[(x + n1) % board.length][(y + n2) % board[0].length];
 				if (token.getTokenState() != TokenState.DEFAULT)
 					continue;
-				// Teste alle theoretich moeglichen Partner
+				// Test all theoretically possible partners
 				for (IToken partner : findTokensWithType(token, grid)) {
 					if (solvable(token, partner, grid)) {
 						IToken[] ret = { token, partner };
@@ -93,12 +116,7 @@ public class Cheats {
 	}
 
 	/**
-	 * Bestimmt ob zwei Tokens zueinander passen (loesbar sind).
-	 * 
-	 * @param token1 Token 1
-	 * @param token2 Token 2
-	 * @param grid   Spielfeld der Tokens
-	 * @return Boolean: Passen Tokens zusammen?
+	 * Determines whether two tokens match (are solvable).
 	 */
 	private static boolean solvable(IToken token1, IToken token2, Grid grid) {
 		if (token1.getTokenState() == TokenState.SOLVED || token2.getTokenState() == TokenState.SOLVED)
@@ -118,35 +136,34 @@ public class Cheats {
 		return false;
 	}
 
-	/**
-	 * 
-	 */
 	private static List<IToken> findTokensWithType(final IToken token, final Grid grid) {
-		// TODO Aufgabe 5c
-    		return null;
+		List<IToken> tokens = new ArrayList<>();
+		IToken[][] board = grid.getGrid();
+		for (int x = 0; x < board.length; x++) {
+			for (int y = 0; y < board[x].length; y++) {
+				IToken current = board[x][y];
+				if (current.getDisplayValue().equals(token.getDisplayValue()) && current != token && current.getTokenState() == TokenState.DEFAULT) {
+					tokens.add(current);
+				}
+			}
+		}
+		return shuffle(tokens);
 	}
 
-	/**
-	 * 
-	 */
+
 	private static List<IToken> shuffle(List<IToken> list) {
-		// TODO Aufgabe 5b
-    		return list;
+		Collections.shuffle(list);
+		return list;
 	}
 
-	/**
-	 * 
-	 */
+
 	private static boolean isCheatPossible(final Grid grid, final int cheatID) {
-		// TODO Aufgabe 5a
-    		return false;
+		return grid.getScore() >= getCheatCost(cheatID);
 	}
 
+
 	/**
-	 * Liefert die Cheatkosten fuer den uebergebenen Cheat zurueck.
-	 *
-	 * @param cheatID ID des Cheats
-	 * @return Cheatkosten
+	 * Returns the cheat costs for the given cheat.
 	 */
 	private static int getCheatCost(final int cheatID) {
 		switch (cheatID) {
