@@ -111,7 +111,6 @@ public class Grid implements IGrid {
 		return grid[x][y];
 	}
 
-
     @Override
     public IToken[][] getGrid() {
         return grid;
@@ -172,7 +171,7 @@ public class Grid implements IGrid {
 		String[] lines = content.split(System.lineSeparator());
 		
 		// Create an array with border size included
-		IToken[][] tokens = new IToken[lines.length + 2][lines[0].split(",").length + 2];
+		IToken[][] tokens = new IToken[lines[0].split(",").length + 2][lines.length + 2];
 
 		// Create border tokens
 		for (int i = 0; i < tokens.length; i++) {
@@ -186,7 +185,7 @@ public class Grid implements IGrid {
 			// Split each line into individual token values
 			String[] tokenValues = lines[i].split(",");
 			for (int j = 0; j < tokenValues.length; j++) {
-				tokens[i+1][j+1] = new Token(Integer.parseInt(tokenValues[j]), TokenState.DEFAULT, new Vector2f(i+1, j+1));
+				tokens[j+1][i+1] = new Token(Integer.parseInt(tokenValues[j]), TokenState.DEFAULT, new Vector2f(i+1, j+1));
 			}
 		}
 		
