@@ -43,7 +43,7 @@ public class Token implements IToken {
 
     @Override
     public String getDisplayValue() {
-        return TokenDisplayValueProvider.getInstance().getDisplayValue(this.id);
+        return TokenDisplayValueProvider.getInstance().getDisplayValue(this.value);
     }
 
     @Override

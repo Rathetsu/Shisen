@@ -52,8 +52,6 @@ public class Launch extends StateBasedGame {
 
 	@Override
 	public void initStatesList(GameContainer arg0) throws SlickException {
-		// Fuege dem StateBasedGame die States hinzu
-		// (der zuerst hinzugefuegte State wird als erster State gestartet)
 		addState(new MainMenuState(Consts.MAINMENU_STATE));
 		addState(new GameplayState(Consts.GAMEPLAY_STATE));
 		addState(new HighscoreState(Consts.HIGHSCORE_STATE));

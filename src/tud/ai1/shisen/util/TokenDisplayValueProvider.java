@@ -6,56 +6,32 @@ import java.util.List;
 
 /**
  * 
- * Klasse zum Ubersetzen von Token-Werten zu Symbolen zum Anzeigen auf dem
- * Spielfeld.
+ * Class for translating token values into symbols to display on theMatchfield.
  * 
- * @author Robert Jakobi
+ * @author Ahmed Ezzat
  *
  */
 public class TokenDisplayValueProvider {
 	private static TokenDisplayValueProvider inst;
 	private final String[] map;
 
-	/**
-	 * Konstruktor zum Initialisieren eines Objekts mit einem uebergebenen Pfad zur
-	 * Symbol-Datei als String.
-	 * 
-	 * @param path Pfad zur Symbol-Datei.
-	 */
+
 	private TokenDisplayValueProvider(final String path) {
 		this.map = this.loadMap(path);
 	}
 
-	/**
-	 * Laedt eine Symbol-Datei von einem als String uebergebenen Pfad.
-	 * 
-	 * @param path Pfad zur Symbol-Datei.
-	 * @return Symbole als String-Array
-	 */
 	private String[] loadMap(final String path) {
 		final List<String> symbols = Arrays.asList(IOOperations.readFile(path).split(Consts.SYMBOL_SEPARATOR));
-		// Self-explaining
 		Collections.shuffle(symbols);
 		return symbols.toArray(String[]::new);
 	}
 
-	/**
-	 * Gibt den zu einer ID passenden String-Wert zum Anzeigen zurueck.
-	 * 
-	 * @param id ID, fuer die der Wert zurueckgegeben wird.
-	 * @return Wert
-	 */
-	public String getDisplayValue(final int id) {
-		if (id < 0)
+	public String getDisplayValue(final int value) {
+		if (value < 0)
 			return "";
-		return this.map[id];
+		return this.map[value];
 	}
 
-	/**
-	 * Statische Methode zum Zurueckgeben der Instanz der Klasse.
-	 * 
-	 * @return Instanz
-	 */
 	public static TokenDisplayValueProvider getInstance() {
 		if (inst == null) {
 			initilize(Consts.SYMBOLS_PATH);
@@ -63,12 +39,6 @@ public class TokenDisplayValueProvider {
 		return inst;
 	}
 
-	/**
-	 * Initialisiert die Instanz der Klasse mit einem gegebenen Pfad als String.
-	 * 
-	 * @param path Pfad zur Symbol-Datei.
-	 * @return True, wenn Instanz initialisiert wurde, ansonsten false
-	 */
 	public static boolean initilize(final String path) {
 		if (inst == null) {
 			inst = new TokenDisplayValueProvider(path);
